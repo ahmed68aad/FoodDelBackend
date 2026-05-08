@@ -37,6 +37,14 @@ app.use(
 connectdb();
 
 //api endpoints
+app.get("/", (request, response) => {
+  response.json({ success: true, message: "Food delivery API is running" });
+});
+
+app.get("/api/health", (request, response) => {
+  response.json({ success: true, status: "ok" });
+});
+
 app.use("/api/food", foodRouter);
 app.use("/images", express.static("uploads"));
 app.use("/api/user", userRouter);
