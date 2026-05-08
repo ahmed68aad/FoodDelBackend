@@ -57,4 +57,6 @@ app.use("/api/order", orderRouter);
 
 
 
-app.listen(port, () => console.log(`server started on port ${port}`));
+app.listen(port, "0.0.0.0", () =>
+  console.log(`server started on port ${port}`)
+);
