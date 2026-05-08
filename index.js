@@ -9,11 +9,29 @@ import orderRouter from "./routes/orderRoute.js";
 
 //app config
 const app = express();
-const port = 4000;
+const port = process.env.PORT || 4000;
+const allowedOrigins = [
+  "http://localhost:5173",
+  "http://localhost:5174",
+  "https://food-del-admin-panel-frontend.vercel.app",
+  "https://food-del-fontend.vercel.app",
+  ...(process.env.CORS_ORIGINS
+    ? process.env.CORS_ORIGINS.split(",").map((origin) => origin.trim())
+    : []),
+];
 
 //middlewars
 app.use(express.json());
-app.use(cors());
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+      return callback(new Error("Not allowed by CORS"));
+    },
+  })
+);
 
 //DB connection
 connectdb();
@@ -29,6 +47,4 @@ app.use("/api/order", orderRouter);
 
 
 
-app.listen(port, () =>
-  console.log(`server started on http://localhost:${port}`)
-);
+app.listen(port, () => console.log(`server started on port ${port}`));
