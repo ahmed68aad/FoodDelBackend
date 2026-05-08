@@ -19,19 +19,21 @@ const allowedOrigins = [
     ? process.env.CORS_ORIGINS.split(",").map((origin) => origin.trim())
     : []),
 ];
+const corsOptions = {
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+    return callback(null, false);
+  },
+  methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization", "token"],
+};
 
 //middlewars
+app.use(cors(corsOptions));
+app.options("*", cors(corsOptions));
 app.use(express.json());
-app.use(
-  cors({
-    origin: (origin, callback) => {
-      if (!origin || allowedOrigins.includes(origin)) {
-        return callback(null, true);
-      }
-      return callback(new Error("Not allowed by CORS"));
-    },
-  })
-);
 
 //DB connection
 connectdb();
