@@ -31,6 +31,10 @@ const corsOptions = {
 };
 
 //middlewars
+app.use((request, response, next) => {
+  console.log(`${request.method} ${request.originalUrl}`);
+  next();
+});
 app.use(cors(corsOptions));
 app.options("*", cors(corsOptions));
 app.use(express.json());
